@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/erfandiakoo/goarpa/shared/constant"
 	"github.com/go-resty/resty/v2"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
@@ -14,7 +15,11 @@ type GoArpa struct {
 	basePath    string
 	restyClient *resty.Client
 	Config      struct {
-		GetServiceTokenEndpoint string
+		GetServiceTokenEndpoint   string
+		CreateCustomerEndpoint    string
+		CreateTransactionEndpoint string
+		CreateServiceEndpoint     string
+		GetCustomerEndpoint       string
 	}
 }
 
@@ -81,6 +86,10 @@ func NewClient(basePath string, options ...func(*GoArpa)) *GoArpa {
 	}
 
 	c.Config.GetServiceTokenEndpoint = makeURL("serv", "token", "GetServiceToken")
+	c.Config.CreateCustomerEndpoint = makeURL("serv", "api", "PostBussiness")
+	c.Config.CreateTransactionEndpoint = makeURL("serv", "api", "NewTransaction")
+	c.Config.CreateServiceEndpoint = makeURL("serv", "api", "PostService")
+	c.Config.GetCustomerEndpoint = makeURL("serv", "api", "GetBussiness")
 
 	for _, option := range options {
 		option(&c)
@@ -155,4 +164,89 @@ func (g *GoArpa) AdminAuthenticate(ctx context.Context, username string, passwor
 	}
 
 	return &token, nil
+}
+
+func (g *GoArpa) CreateCustomer(ctx context.Context, accessToken string, customer CreateCustomerRequest) (*CreateCustomerResponse, error) {
+	const errMessage = "could not create customer"
+
+	var response CreateCustomerResponse
+
+	resp, err := g.GetRequestWithBearerAuth(ctx, accessToken).
+		SetBody(customer).
+		SetResult(response).
+		Post(g.basePath + "/" + g.Config.CreateCustomerEndpoint)
+
+	if err := checkForError(resp, err, errMessage); err != nil {
+		return nil, err
+	}
+
+	return &response, nil
+}
+
+func (g *GoArpa) CreateTransaction(ctx context.Context, accessToken string, transaction CreateTransactionRequest) (*CreateTransactionResponse, error) {
+	const errMessage = "could not create transaction"
+
+	var response CreateTransactionResponse
+
+	resp, err := g.GetRequestWithBearerAuth(ctx, accessToken).
+		SetBody(transaction).
+		SetResult(response).
+		Post(g.basePath + "/" + g.Config.CreateTransactionEndpoint)
+
+	if err := checkForError(resp, err, errMessage); err != nil {
+		return nil, err
+	}
+
+	return &response, nil
+}
+
+func (g *GoArpa) CreateService(ctx context.Context, accessToken string, service CreateServiceRequest) (*CreateServiceResponse, error) {
+	const errMessage = "could not create service"
+
+	var response CreateServiceResponse
+
+	resp, err := g.GetRequestWithBearerAuth(ctx, accessToken).
+		SetBody(service).
+		SetResult(response).
+		Post(g.basePath + "/" + g.Config.CreateServiceEndpoint)
+
+	if err := checkForError(resp, err, errMessage); err != nil {
+		return nil, err
+	}
+
+	return &response, nil
+}
+
+func (g *GoArpa) GetCustomerByMobile(ctx context.Context, accessToken, mobile string) (*CreateCustomerResponse, error) {
+	const errMessage = "could not get form info"
+
+	var result CreateCustomerResponse
+
+	resp, err := g.GetRequestWithBearerAuth(ctx, accessToken).
+		SetHeader(constant.MobileKey, mobile).
+		SetResult(&result).
+		Post(g.basePath + "/" + g.Config.GetCustomerEndpoint)
+
+	if err := checkForError(resp, err, errMessage); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+func (g *GoArpa) GetCustomerByBusinessCode(ctx context.Context, accessToken, businessCode string) (*CreateCustomerResponse, error) {
+	const errMessage = "could not get customer info"
+
+	var result CreateCustomerResponse
+
+	resp, err := g.GetRequestWithBearerAuth(ctx, accessToken).
+		SetHeader(constant.BusinessCodeKey, businessCode).
+		SetResult(&result).
+		Post(g.basePath + "/" + g.Config.GetCustomerEndpoint)
+
+	if err := checkForError(resp, err, errMessage); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
 }

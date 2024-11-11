@@ -124,3 +124,78 @@ type APIError struct {
 func (apiError APIError) Error() string {
 	return apiError.Message
 }
+
+type CreateCustomerRequest struct {
+	BusName            string  `json:"BusName"`
+	ProvinceID         *int64  `json:"ProvinceId"`
+	CityID             *int64  `json:"CityId"`
+	Email              *string `json:"Email"`
+	Mobile             *string `json:"Mobile"`
+	PhoneNo            *string `json:"PhoneNo"`
+	Name               *string `json:"Name"`
+	Family             *string `json:"Family"`
+	NationalCode       *int64  `json:"NationalCode"`
+	BirthDate          *string `json:"BirthDate"`
+	Sexuality          *string `json:"Sexuality"`
+	RealOrFinancial    *int64  `json:"RealOrFinancial"`
+	Address            *string `json:"Address"`
+	FinCode            *int64  `json:"FinCode"`
+	IDNo               *int64  `json:"IDNo"`
+	RegisterNumber     *int64  `json:"RegisterNumber"`
+	BusinessCategoryID *int64  `json:"BusinessCategoryId"`
+}
+
+type CreateCustomerResponse struct {
+	BusinessCode string `json:"BussinesCode"`
+	BusinessID   string `json:"BussinessID"`
+	Existed      bool   `json:"Existed"`
+}
+
+type CreateTransactionRequest struct {
+	Data   Data                `json:"Data"`
+	Items  []map[string]*int64 `json:"Items"`
+	AddSub []AddSub            `json:"AddSub"`
+}
+
+type AddSub struct {
+	AddSubID  int64 `json:"AddSubID"`
+	TASAmount int64 `json:"TASAmount"`
+}
+
+type Data struct {
+	TransactionID        interface{} `json:"TransactionID"`
+	BusinessID           int64       `json:"BusinessID"`
+	DocAliasID           int64       `json:"DocAliasId"`
+	TransStateID         int64       `json:"TransStateId"`
+	FactorTypeID         int64       `json:"FactorTypeId"`
+	CalcTaxAndToll       int64       `json:"CalcTaxAndToll"`
+	TransDiscountAmount  int64       `json:"TransDiscountAmount"`
+	TransDiscountPercent float64     `json:"TransDiscountPercent"`
+	DepartmentID         int64       `json:"DepartmentID"`
+	SettlementID         int64       `json:"SettlementID"`
+	Description          string      `json:"Description"`
+}
+
+type CreateTransactionResponse struct {
+	Data  []Datum     `json:"data"`
+	Error interface{} `json:"error"`
+}
+
+type Datum struct {
+	TransactionID int64 `json:"TransactionID"`
+	TransNumber   int64 `json:"TransNumber"`
+	TransLineID   int64 `json:"TransLineID"`
+	ItemID        int64 `json:"ItemID"`
+}
+
+type CreateServiceRequest struct {
+	ServiceName    string `json:"ServiceName"`
+	ServiceCode    string `json:"ServiceCode"`
+	ItemCategoryID int64  `json:"ItemCategoryID"`
+	IAGroupID      int64  `json:"IAGroupID"`
+}
+
+type CreateServiceResponse struct {
+	ServiceName    string `json:"ServiceName"`
+	ItemCategoryID int64  `json:"ItemCategoryId"`
+}
