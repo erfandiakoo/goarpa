@@ -1,4 +1,5 @@
 # Arpa go packages
+[![Tests](https://github.com/erfandiakoo/goarpa/actions/workflows/go.yml/badge.svg)](https://github.com/erfandiakoo/goarpa/actions/workflows/go.yml)
 
 ## Changelog
 
