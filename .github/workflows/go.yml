@@ -1,0 +1,12 @@
+name: Tests
+on:
+  - push
+  - pull_request
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      # Updating go report card for main branch only
+      - name: GoReportCard
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: curl --fail --request POST "https://goreportcard.com/checks" --data "repo=github.com/erfandiakoo/goarpa"
