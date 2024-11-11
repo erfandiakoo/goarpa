@@ -1,0 +1,6 @@
+test:
+	go test ./...
+test-2:
+	go test -v -run Test_AdminAuthenticate ./... 
+
+.PHONY: test test-2
