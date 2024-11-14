@@ -144,26 +144,29 @@ func checkForError(resp *resty.Response, err error, errMessage string) error {
 	return nil
 }
 
-func (g *GoArpa) AdminAuthenticate(ctx context.Context, username string, password string) (*JWT, error) {
+func (g *GoArpa) GetAdminToken(ctx context.Context, username string, password string) (string, error) {
 	const errMessage = "could not get token"
 
-	var token JWT
-	var req *resty.Request
+	req := g.GetRequest(ctx)
 
-	req = g.GetRequest(ctx)
+	// Construct the URL with query parameters
+	url := g.basePath + "/" + g.Config.GetServiceTokenEndpoint +
+		"?username=" + username + "&password=" + password
 
-	resp, err := req.SetHeaders(map[string]string{
-		"username": username,
-		"password": password,
-	}).
-		SetResult(&token).
-		Post(g.basePath + "/" + g.Config.GetServiceTokenEndpoint)
+	// Debug: Print the URL to ensure it's constructed correctly
+	fmt.Println("Request URL:", url)
 
+	// Send the GET request
+	resp, err := req.Get(url)
 	if err := checkForError(resp, err, errMessage); err != nil {
-		return nil, err
+		return "", err
 	}
 
-	return &token, nil
+	// Debug: Log the raw response body
+	fmt.Println("Raw response body:", resp.String())
+
+	// Return the response body as a plain string (the token)
+	return resp.String(), nil
 }
 
 func (g *GoArpa) CreateCustomer(ctx context.Context, accessToken string, customer CreateCustomerRequest) (*CreateCustomerResponse, error) {
