@@ -157,7 +157,7 @@ func FailRequest(client *goarpa.GoArpa, err error, failN, skipN int) *goarpa.GoA
 	return client
 }
 
-func GetToken(t testing.TB, client *goarpa.GoArpa) *goarpa.JWT {
+func GetToken(t testing.TB, client *goarpa.GoArpa) string {
 	cfg := GetConfig(t)
 	token, err := client.AdminAuthenticate(
 		context.Background(),
@@ -165,6 +165,7 @@ func GetToken(t testing.TB, client *goarpa.GoArpa) *goarpa.JWT {
 		cfg.Admin.Password,
 	)
 	require.NoError(t, err, "Login failed")
+	require.NotEmpty(t, token, "Got an empty token")
 	return token
 }
 
@@ -176,13 +177,17 @@ func Test_AdminAuthenticate(t *testing.T) {
 	t.Parallel()
 	cfg := GetConfig(t)
 	client := NewClientWithDebug(t)
+
+	// Obtain the token from AdminAuthenticate
 	newToken, err := client.AdminAuthenticate(
 		context.Background(),
 		cfg.Admin.UserName,
 		cfg.Admin.Password,
 	)
+
 	require.NoError(t, err, "Login failed")
-	t.Logf("New token: %+v", *newToken)
-	//require.Equal(t, newToken.ExpiresAt, 0, "Got a refresh token instead of offline")
-	require.NotEmpty(t, newToken.AccessToken, "Got an empty if token")
+	require.NotEmpty(t, newToken, "Got an empty token")
+
+	// Log the new token and response body for debugging purposes
+	t.Logf("New token: %s", newToken)
 }
