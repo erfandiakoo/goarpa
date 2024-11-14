@@ -159,7 +159,7 @@ func FailRequest(client *goarpa.GoArpa, err error, failN, skipN int) *goarpa.GoA
 
 func GetToken(t testing.TB, client *goarpa.GoArpa) string {
 	cfg := GetConfig(t)
-	token, err := client.AdminAuthenticate(
+	token, err := client.GetAdminToken(
 		context.Background(),
 		cfg.Admin.UserName,
 		cfg.Admin.Password,
@@ -173,13 +173,13 @@ func GetToken(t testing.TB, client *goarpa.GoArpa) string {
 // API tests
 // ---------
 
-func Test_AdminAuthenticate(t *testing.T) {
+func Test_GetAdminToken(t *testing.T) {
 	t.Parallel()
 	cfg := GetConfig(t)
 	client := NewClientWithDebug(t)
 
 	// Obtain the token from AdminAuthenticate
-	newToken, err := client.AdminAuthenticate(
+	newToken, err := client.GetAdminToken(
 		context.Background(),
 		cfg.Admin.UserName,
 		cfg.Admin.Password,
