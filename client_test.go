@@ -18,6 +18,7 @@ import (
 
 	"github.com/erfandiakoo/goarpa/v2"
 	"github.com/go-resty/resty/v2"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/exp/rand"
 )
@@ -157,16 +158,16 @@ func FailRequest(client *goarpa.GoArpa, err error, failN, skipN int) *goarpa.GoA
 	return client
 }
 
-func GetToken(t testing.TB, client *goarpa.GoArpa) string {
+func GetToken(t testing.TB, client *goarpa.GoArpa) (string, []*http.Cookie) {
 	cfg := GetConfig(t)
-	token, err := client.GetAdminToken(
+	token, cookie, err := client.GetAdminToken(
 		context.Background(),
 		cfg.Admin.UserName,
 		cfg.Admin.Password,
 	)
 	require.NoError(t, err, "Login failed")
 	require.NotEmpty(t, token, "Got an empty token")
-	return token
+	return token, cookie
 }
 
 // ---------
@@ -179,7 +180,7 @@ func Test_GetAdminToken(t *testing.T) {
 	client := NewClientWithDebug(t)
 
 	// Obtain the token from AdminAuthenticate
-	newToken, err := client.GetAdminToken(
+	newToken, cookie, err := client.GetAdminToken(
 		context.Background(),
 		cfg.Admin.UserName,
 		cfg.Admin.Password,
@@ -187,7 +188,36 @@ func Test_GetAdminToken(t *testing.T) {
 
 	require.NoError(t, err, "Login failed")
 	require.NotEmpty(t, newToken, "Got an empty token")
+	require.NotEmpty(t, cookie, "Got an empty cookie")
 
-	// Log the new token and response body for debugging purposes
 	t.Logf("New token: %s", newToken)
+	t.Logf("New cookie: %s", cookie)
+}
+
+func Test_GetCustomerByMobile(t *testing.T) {
+	t.Parallel()
+	client := NewClientWithDebug(t)
+	token, cookie := GetToken(t, client)
+
+	customerInfo, err := client.GetCustomerByMobile(
+		context.Background(),
+		token,
+		cookie,
+		"09128575183",
+	)
+	require.NoError(t, err, "Expected no error when fetching valid customer info")
+	require.NotNil(t, customerInfo, "Expected customer info, got nil")
+	t.Logf("Customer Info: %+v", customerInfo)
+
+	FailRequest(client, nil, 1, 0)
+
+	_, err = client.GetCustomerByMobile(
+		context.Background(),
+		token,
+		cookie,
+		"09128575183",
+	)
+	require.Error(t, err, "Expected an error when request fails")
+
+	assert.Contains(t, err.Error(), "could not get customer info", "Error message mismatch")
 }

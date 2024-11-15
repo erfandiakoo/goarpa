@@ -1,6 +1,8 @@
 test:
 	go test ./...
-test-2:
+test-Login:
 	go test -v -run Test_AdminAuthenticate ./... 
+test-getCustomerByMobile:
+	go test -v -run Test_GetCustomerByMobile ./... 
 
-.PHONY: test test-2
+.PHONY: test test-login test-getCustomerByMobile

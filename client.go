@@ -3,6 +3,7 @@ package goarpa
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/erfandiakoo/goarpa/shared/constant"
@@ -79,6 +80,13 @@ func (g *GoArpa) GetRequestWithBearerAuth(ctx context.Context, token string) *re
 		SetHeader("Content-Type", "application/json")
 }
 
+func (g *GoArpa) GetRequestWithBearerAuthWithCookie(ctx context.Context, token string, cookie []*http.Cookie) *resty.Request {
+	return g.GetRequest(ctx).
+		SetAuthToken(token).
+		SetCookie(cookie[0]).
+		SetHeader("Content-Type", "application/json")
+}
+
 func NewClient(basePath string, options ...func(*GoArpa)) *GoArpa {
 	c := GoArpa{
 		basePath:    strings.TrimRight(basePath, urlSeparator),
@@ -89,7 +97,7 @@ func NewClient(basePath string, options ...func(*GoArpa)) *GoArpa {
 	c.Config.CreateCustomerEndpoint = makeURL("serv", "api", "PostBussiness")
 	c.Config.CreateTransactionEndpoint = makeURL("serv", "api", "NewTransaction")
 	c.Config.CreateServiceEndpoint = makeURL("serv", "api", "PostService")
-	c.Config.GetCustomerEndpoint = makeURL("serv", "api", "GetBussiness")
+	c.Config.GetCustomerEndpoint = makeURL("serv", "api", "GetBusiness")
 
 	for _, option := range options {
 		option(&c)
@@ -144,29 +152,22 @@ func checkForError(resp *resty.Response, err error, errMessage string) error {
 	return nil
 }
 
-func (g *GoArpa) GetAdminToken(ctx context.Context, username string, password string) (string, error) {
+func (g *GoArpa) GetAdminToken(ctx context.Context, username string, password string) (string, []*http.Cookie, error) {
 	const errMessage = "could not get token"
 
 	req := g.GetRequest(ctx)
 
-	// Construct the URL with query parameters
-	url := g.basePath + "/" + g.Config.GetServiceTokenEndpoint +
-		"?username=" + username + "&password=" + password
+	resp, err := req.SetQueryParams(map[string]string{
+		"username": username,
+		"password": password,
+	}).
+		Get(g.basePath + "/" + g.Config.GetServiceTokenEndpoint + "?")
 
-	// Debug: Print the URL to ensure it's constructed correctly
-	fmt.Println("Request URL:", url)
-
-	// Send the GET request
-	resp, err := req.Get(url)
 	if err := checkForError(resp, err, errMessage); err != nil {
-		return "", err
+		return "", nil, err
 	}
 
-	// Debug: Log the raw response body
-	fmt.Println("Raw response body:", resp.String())
-
-	// Return the response body as a plain string (the token)
-	return resp.String(), nil
+	return resp.String(), resp.Cookies(), nil
 }
 
 func (g *GoArpa) CreateCustomer(ctx context.Context, accessToken string, customer CreateCustomerRequest) (*CreateCustomerResponse, error) {
@@ -220,21 +221,25 @@ func (g *GoArpa) CreateService(ctx context.Context, accessToken string, service 
 	return &response, nil
 }
 
-func (g *GoArpa) GetCustomerByMobile(ctx context.Context, accessToken, mobile string) (*CreateCustomerResponse, error) {
-	const errMessage = "could not get form info"
+func (g *GoArpa) GetCustomerByMobile(ctx context.Context, accessToken string, cookie []*http.Cookie, mobile string) (*GetCustomerResponse, error) {
+	const errMessage = "could not get customer info"
 
-	var result CreateCustomerResponse
+	// Create an instance of GetCustomerResponse to hold the response
+	result := &GetCustomerResponse{}
 
-	resp, err := g.GetRequestWithBearerAuth(ctx, accessToken).
-		SetHeader(constant.MobileKey, mobile).
-		SetResult(&result).
-		Post(g.basePath + "/" + g.Config.GetCustomerEndpoint)
+	// Make the request and set result to auto-unmarshal
+	resp, err := g.GetRequestWithBearerAuthWithCookie(ctx, accessToken, cookie).
+		SetQueryParam(constant.MobileKey, mobile).
+		SetResult(result).
+		Get(fmt.Sprintf("%s/%s", g.basePath, g.Config.GetCustomerEndpoint))
 
+	// Check for errors
 	if err := checkForError(resp, err, errMessage); err != nil {
 		return nil, err
 	}
 
-	return &result, nil
+	// Return the unmarshaled result
+	return result, nil
 }
 
 func (g *GoArpa) GetCustomerByBusinessCode(ctx context.Context, accessToken, businessCode string) (*CreateCustomerResponse, error) {
@@ -243,9 +248,9 @@ func (g *GoArpa) GetCustomerByBusinessCode(ctx context.Context, accessToken, bus
 	var result CreateCustomerResponse
 
 	resp, err := g.GetRequestWithBearerAuth(ctx, accessToken).
-		SetHeader(constant.BusinessCodeKey, businessCode).
+		SetQueryParam(constant.BusinessCodeKey, businessCode).
 		SetResult(&result).
-		Post(g.basePath + "/" + g.Config.GetCustomerEndpoint)
+		Get(g.basePath + "/" + g.Config.GetCustomerEndpoint + "?")
 
 	if err := checkForError(resp, err, errMessage); err != nil {
 		return nil, err

@@ -3,7 +3,9 @@ package goarpa
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"strings"
+	"time"
 )
 
 // GetQueryParams converts the struct to map[string]string
@@ -176,6 +178,73 @@ type Data struct {
 	Description          string      `json:"Description"`
 }
 
+type GetCustomerResponse struct {
+	Data  []Datum2    `json:"data"`
+	Error interface{} `json:"error"`
+}
+
+type Datum2 struct {
+	RowNumber           string `json:"RowNumber"`
+	BusinessID          string `json:"BusinessID"`
+	BusinessCode        string `json:"BusinessCode"`
+	BusinessName        string `json:"BusinessName"`
+	Address             string `json:"Address"`
+	PhoneNo             string `json:"PhoneNo"`
+	FinCode             string `json:"FinCode"`
+	Mobile              string `json:"Mobile"`
+	Fax                 string `json:"Fax"`
+	PriceLevelID        string `json:"PriceLevelID"`
+	DefaultDiscount     int64  `json:"DefaultDiscount"`
+	BusinessCategoryID  string `json:"BusinessCategoryID"`
+	AccID               string `json:"AccID"`
+	PostalCode          string `json:"PostalCode"`
+	GeoRegionID         string `json:"GeoRegionID"`
+	DeliveryRegionID    string `json:"DeliveryRegionID"`
+	DefaultSettlementID string `json:"DefaultSettlementID"`
+	WithoutCredit       string `json:"WithoutCredit"`
+	County              string `json:"County"`
+	RegisterNumber      string `json:"RegisterNumber"`
+	LatinName           string `json:"LatinName"`
+	BusinessActivity    string `json:"BusinessActivity"`
+	BusDescription      string `json:"BusDescription"`
+	InActive            string `json:"InActive"`
+	Name                string `json:"Name"`
+	Family              string `json:"Family"`
+	FatherName          string `json:"FatherName"`
+	NationalCode        string `json:"NationalCode"`
+	IDNo                string `json:"IDNo"`
+	//BirthDate           *CustomTime `json:"BirthDate"`
+	BirthPlace        string      `json:"BirthPlace"`
+	BankID            string      `json:"BankID"`
+	AccountType       string      `json:"AccountType"`
+	AccountNo         string      `json:"AccountNo"`
+	Sexuality         string      `json:"Sexuality"`
+	Creditable        string      `json:"Creditable"`
+	ProvinceID        string      `json:"ProvinceID"`
+	CityID            string      `json:"CityID"`
+	TaxCityCode       string      `json:"TaxCityCode"`
+	TaxProvincesCode  string      `json:"TaxProvincesCode"`
+	PerCityCode       string      `json:"PerCityCode"`
+	Email             string      `json:"Email"`
+	WebSite           string      `json:"WebSite"`
+	RelatedUserID     string      `json:"RelatedUserID"`
+	CreatorUserID     string      `json:"Creator_UserID"`
+	CreationDate      *CustomTime `json:"Creation_Date"`
+	CardNumber        string      `json:"CardNumber"`
+	CardSerial        string      `json:"CardSerial"`
+	RepresentorCode   string      `json:"RepresentorCode"`
+	RepresentorID     string      `json:"RepresentorID"`
+	CheckCredit       int64       `json:"CheckCredit"`
+	UnCashCredit      int64       `json:"UnCashCredit"`
+	ModificationDate  *CustomTime `json:"Modification_Date"`
+	IsCustomer        string      `json:"IsCustomer"`
+	IsVendor          string      `json:"IsVendor"`
+	IsSaleManager     string      `json:"IsSaleManager"`
+	IsRepresentor     string      `json:"IsRepresentor"`
+	IsDeliveryManager string      `json:"IsDeliveryManager"`
+	RealOrFinancial   string      `json:"RealOrFinancial"`
+}
+
 type CreateTransactionResponse struct {
 	Data  []Datum     `json:"data"`
 	Error interface{} `json:"error"`
@@ -198,4 +267,23 @@ type CreateServiceRequest struct {
 type CreateServiceResponse struct {
 	ServiceName    string `json:"ServiceName"`
 	ItemCategoryID int64  `json:"ItemCategoryId"`
+}
+
+type CustomTime struct {
+	time.Time
+}
+
+func (ct *CustomTime) UnmarshalJSON(data []byte) error {
+	str := strings.Trim(string(data), `"`)
+	if str == "" {
+		return nil
+	}
+
+	t, err := time.Parse("2006-01-02 15:04:05", str)
+	if err != nil {
+		return fmt.Errorf("failed to parse time: %w", err)
+	}
+
+	ct.Time = t
+	return nil
 }
