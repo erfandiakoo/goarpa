@@ -242,10 +242,10 @@ func (g *GoArpa) GetCustomerByMobile(ctx context.Context, accessToken string, co
 	return result, nil
 }
 
-func (g *GoArpa) GetCustomerByBusinessCode(ctx context.Context, accessToken, businessCode string) (*CreateCustomerResponse, error) {
+func (g *GoArpa) GetCustomerByBusinessCode(ctx context.Context, accessToken, businessCode string) (*GetCustomerResponse, error) {
 	const errMessage = "could not get customer info"
 
-	var result CreateCustomerResponse
+	var result GetCustomerResponse
 
 	resp, err := g.GetRequestWithBearerAuth(ctx, accessToken).
 		SetQueryParam(constant.BusinessCodeKey, businessCode).
