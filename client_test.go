@@ -221,3 +221,29 @@ func Test_GetCustomerByMobile(t *testing.T) {
 
 	assert.Contains(t, err.Error(), "could not get customer info", "Error message mismatch")
 }
+
+func Test_GetCustomerByBusinessCode(t *testing.T) {
+	t.Parallel()
+	client := NewClientWithDebug(t)
+	token, _ := GetToken(t, client)
+
+	customerInfo, err := client.GetCustomerByBusinessCode(
+		context.Background(),
+		token,
+		"127013",
+	)
+	require.NoError(t, err, "Expected no error when fetching valid customer info")
+	require.NotNil(t, customerInfo, "Expected customer info, got nil")
+	t.Logf("Customer Info: %+v", customerInfo)
+
+	FailRequest(client, nil, 1, 0)
+
+	_, err = client.GetCustomerByBusinessCode(
+		context.Background(),
+		token,
+		"127013",
+	)
+	require.Error(t, err, "Expected an error when request fails")
+
+	assert.Contains(t, err.Error(), "could not get customer info", "Error message mismatch")
+}

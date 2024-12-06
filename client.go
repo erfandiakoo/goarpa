@@ -250,7 +250,7 @@ func (g *GoArpa) GetCustomerByBusinessCode(ctx context.Context, accessToken, bus
 	resp, err := g.GetRequestWithBearerAuth(ctx, accessToken).
 		SetQueryParam(constant.BusinessCodeKey, businessCode).
 		SetResult(&result).
-		Get(g.basePath + "/" + g.Config.GetCustomerEndpoint + "?")
+		Get(fmt.Sprintf("%s/%s", g.basePath, g.Config.GetCustomerEndpoint))
 
 	if err := checkForError(resp, err, errMessage); err != nil {
 		return nil, err
