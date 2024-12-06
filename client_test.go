@@ -225,11 +225,12 @@ func Test_GetCustomerByMobile(t *testing.T) {
 func Test_GetCustomerByBusinessCode(t *testing.T) {
 	t.Parallel()
 	client := NewClientWithDebug(t)
-	token, _ := GetToken(t, client)
+	token, cookie := GetToken(t, client)
 
 	customerInfo, err := client.GetCustomerByBusinessCode(
 		context.Background(),
 		token,
+		cookie,
 		"127013",
 	)
 	require.NoError(t, err, "Expected no error when fetching valid customer info")
@@ -241,6 +242,7 @@ func Test_GetCustomerByBusinessCode(t *testing.T) {
 	_, err = client.GetCustomerByBusinessCode(
 		context.Background(),
 		token,
+		cookie,
 		"127013",
 	)
 	require.Error(t, err, "Expected an error when request fails")
