@@ -184,35 +184,35 @@ type GetCustomerResponse struct {
 }
 
 type Datum2 struct {
-	RowNumber           string `json:"RowNumber"`
-	BusinessID          string `json:"BusinessID"`
-	BusinessCode        string `json:"BusinessCode"`
-	BusinessName        string `json:"BusinessName"`
-	Address             string `json:"Address"`
-	PhoneNo             string `json:"PhoneNo"`
-	FinCode             string `json:"FinCode"`
-	Mobile              string `json:"Mobile"`
-	Fax                 string `json:"Fax"`
-	PriceLevelID        string `json:"PriceLevelID"`
-	DefaultDiscount     int64  `json:"DefaultDiscount"`
-	BusinessCategoryID  string `json:"BusinessCategoryID"`
-	AccID               string `json:"AccID"`
-	PostalCode          string `json:"PostalCode"`
-	GeoRegionID         string `json:"GeoRegionID"`
-	DeliveryRegionID    string `json:"DeliveryRegionID"`
-	DefaultSettlementID string `json:"DefaultSettlementID"`
-	WithoutCredit       string `json:"WithoutCredit"`
-	County              string `json:"County"`
-	RegisterNumber      string `json:"RegisterNumber"`
-	LatinName           string `json:"LatinName"`
-	BusinessActivity    string `json:"BusinessActivity"`
-	BusDescription      string `json:"BusDescription"`
-	InActive            string `json:"InActive"`
-	Name                string `json:"Name"`
-	Family              string `json:"Family"`
-	FatherName          string `json:"FatherName"`
-	NationalCode        string `json:"NationalCode"`
-	IDNo                string `json:"IDNo"`
+	RowNumber           string  `json:"RowNumber"`
+	BusinessID          string  `json:"BusinessID"`
+	BusinessCode        string  `json:"BusinessCode"`
+	BusinessName        string  `json:"BusinessName"`
+	Address             string  `json:"Address"`
+	PhoneNo             string  `json:"PhoneNo"`
+	FinCode             string  `json:"FinCode"`
+	Mobile              string  `json:"Mobile"`
+	Fax                 string  `json:"Fax"`
+	PriceLevelID        string  `json:"PriceLevelID"`
+	DefaultDiscount     float64 `json:"DefaultDiscount"`
+	BusinessCategoryID  string  `json:"BusinessCategoryID"`
+	AccID               string  `json:"AccID"`
+	PostalCode          string  `json:"PostalCode"`
+	GeoRegionID         string  `json:"GeoRegionID"`
+	DeliveryRegionID    string  `json:"DeliveryRegionID"`
+	DefaultSettlementID string  `json:"DefaultSettlementID"`
+	WithoutCredit       string  `json:"WithoutCredit"`
+	County              string  `json:"County"`
+	RegisterNumber      string  `json:"RegisterNumber"`
+	LatinName           string  `json:"LatinName"`
+	BusinessActivity    string  `json:"BusinessActivity"`
+	BusDescription      string  `json:"BusDescription"`
+	InActive            string  `json:"InActive"`
+	Name                string  `json:"Name"`
+	Family              string  `json:"Family"`
+	FatherName          string  `json:"FatherName"`
+	NationalCode        string  `json:"NationalCode"`
+	IDNo                string  `json:"IDNo"`
 	//BirthDate           *CustomTime `json:"BirthDate"`
 	BirthPlace        string      `json:"BirthPlace"`
 	BankID            string      `json:"BankID"`
@@ -234,8 +234,8 @@ type Datum2 struct {
 	CardSerial        string      `json:"CardSerial"`
 	RepresentorCode   string      `json:"RepresentorCode"`
 	RepresentorID     string      `json:"RepresentorID"`
-	CheckCredit       int64       `json:"CheckCredit"`
-	UnCashCredit      int64       `json:"UnCashCredit"`
+	CheckCredit       float64     `json:"CheckCredit"`
+	UnCashCredit      float64     `json:"UnCashCredit"`
 	ModificationDate  *CustomTime `json:"Modification_Date"`
 	IsCustomer        string      `json:"IsCustomer"`
 	IsVendor          string      `json:"IsVendor"`
