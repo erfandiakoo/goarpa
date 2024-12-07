@@ -177,7 +177,7 @@ func (g *GoArpa) CreateCustomer(ctx context.Context, accessToken string, cookie 
 
 	resp, err := g.GetRequestWithBearerAuthWithCookie(ctx, accessToken, cookie).
 		SetBody(customer).
-		SetResult(response).
+		SetResult(&response).
 		Post(g.basePath + "/" + g.Config.CreateCustomerEndpoint)
 
 	if err := checkForError(resp, err, errMessage); err != nil {

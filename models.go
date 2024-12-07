@@ -155,7 +155,7 @@ type RetCustomerResponse struct {
 type CreateCustomerResponse struct {
 	BusinessID   string `json:"BusinessId"`
 	BusinessCode string `json:"BusinessCode"`
-	Existed      string `json:"Existed"`
+	Existed      bool   `json:"Existed"`
 }
 
 type CreateTransactionRequest struct {
