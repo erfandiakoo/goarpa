@@ -21,6 +21,7 @@ type GoArpa struct {
 		CreateTransactionEndpoint string
 		CreateServiceEndpoint     string
 		GetCustomerEndpoint       string
+		GetItemEndpoint           string
 	}
 }
 
@@ -98,6 +99,7 @@ func NewClient(basePath string, options ...func(*GoArpa)) *GoArpa {
 	c.Config.CreateTransactionEndpoint = makeURL("serv", "api", "NewTransaction")
 	c.Config.CreateServiceEndpoint = makeURL("serv", "api", "PostService")
 	c.Config.GetCustomerEndpoint = makeURL("serv", "api", "GetBusiness")
+	c.Config.GetItemEndpoint = makeURL("serv", "api", "GetItem")
 
 	for _, option := range options {
 		option(&c)
@@ -256,5 +258,25 @@ func (g *GoArpa) GetCustomerByBusinessCode(ctx context.Context, accessToken stri
 		return nil, err
 	}
 
+	return result, nil
+}
+
+func (g *GoArpa) GetServiceByItemCode(ctx context.Context, accessToken string, cookie []*http.Cookie, itemCode string) (*RetServiceResponse, error) {
+	const errMessage = "could not get service info"
+
+	result := &RetServiceResponse{}
+
+	// Make the request and set result to auto-unmarshal
+	resp, err := g.GetRequestWithBearerAuthWithCookie(ctx, accessToken, cookie).
+		SetQueryParam(constant.ItemCodeKey, itemCode).
+		SetResult(&result).
+		Get(fmt.Sprintf("%s/%s", g.basePath, g.Config.GetItemEndpoint))
+
+	// Check for errors
+	if err := checkForError(resp, err, errMessage); err != nil {
+		return nil, err
+	}
+
+	// Return the unmarshaled result
 	return result, nil
 }

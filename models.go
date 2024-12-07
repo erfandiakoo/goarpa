@@ -292,3 +292,48 @@ func (ct *CustomTime) UnmarshalJSON(data []byte) error {
 	ct.Time = t
 	return nil
 }
+
+type RetServiceResponse struct {
+	Data  []GetServiceResponse `json:"data"`
+	Error interface{}          `json:"error"`
+}
+
+type GetServiceResponse struct {
+	RowNumber              string     `json:"RowNumber"`
+	ItemID                 string     `json:"ItemID"`
+	ItemCode               string     `json:"ItemCode"`
+	ItemName               string     `json:"ItemName"`
+	SalePrice              int64      `json:"SalePrice"`
+	ConsumerPrice          string     `json:"ConsumerPrice"`
+	IAGroupID              string     `json:"IAGroupID"`
+	ConstItemName          string     `json:"ConstItemName"`
+	Factory                string     `json:"Factory"`
+	IsActive               string     `json:"IsActive"`
+	ItemLatinName          string     `json:"ItemLatinName"`
+	LimitQty               int64      `json:"LimitQty"`
+	Qty                    int64      `json:"Qty"`
+	ItemNote               string     `json:"ItemNote"`
+	ItemCustomFieldsDesc   string     `json:"ItemCustomFieldsDesc"`
+	LastPurchasePrice      int64      `json:"LastPurchasePrice"`
+	Serialized             string     `json:"Serialized"`
+	ItemType               string     `json:"ItemType"`
+	MainGroup              string     `json:"MainGroup"`
+	MaxSalePrice           int64      `json:"MaxSalePrice"`
+	MinSalePrice           int64      `json:"MinSalePrice"`
+	TechnicalNumber        string     `json:"TechnicalNumber"`
+	UnitsRatio             string     `json:"UnitsRatio"`
+	InverseUnitsRatio      int64      `json:"InverseUnitsRatio"`
+	MjUnitName             string     `json:"MjUnitName"`
+	MnUnitName             string     `json:"MnUnitName"`
+	DefaultStockAreaID     string     `json:"DefaultStockAreaID"`
+	ItemCategoryID         string     `json:"ItemCategoryID"`
+	DefaultDiscountPercent int64      `json:"DefaultDiscountPercent"`
+	DefaultDiscountValue   int64      `json:"DefaultDiscountValue"`
+	CreationDate           CustomTime `json:"Creation_Date"`
+	HasTaxAndToll          string     `json:"HasTaxAndToll"`
+	Geramazh               string     `json:"Geramazh"`
+	DefaultPartOfNQty1     string     `json:"DefaultPartOfNQty1"`
+	ICCategoryID           string     `json:"ICCategoryID"`
+	Weight                 int64      `json:"Weight"`
+	IsProduct              string     `json:"IsProduct"`
+}

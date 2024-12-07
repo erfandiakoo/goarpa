@@ -249,3 +249,31 @@ func Test_GetCustomerByBusinessCode(t *testing.T) {
 
 	assert.Contains(t, err.Error(), "could not get customer info", "Error message mismatch")
 }
+
+func Test_GetServiceByItemCode(t *testing.T) {
+	t.Parallel()
+	client := NewClientWithDebug(t)
+	token, cookie := GetToken(t, client)
+
+	customerInfo, err := client.GetServiceByItemCode(
+		context.Background(),
+		token,
+		cookie,
+		"650304",
+	)
+	require.NoError(t, err, "Expected no error when fetching valid service info")
+	require.NotNil(t, customerInfo, "Expected service info, got nil")
+	t.Logf("Service Info: %+v", customerInfo)
+
+	FailRequest(client, nil, 1, 0)
+
+	_, err = client.GetServiceByItemCode(
+		context.Background(),
+		token,
+		cookie,
+		"650304",
+	)
+	require.Error(t, err, "Expected an error when request fails")
+
+	assert.Contains(t, err.Error(), "could not get service info", "Error message mismatch")
+}
