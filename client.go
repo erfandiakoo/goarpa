@@ -94,10 +94,10 @@ func NewClient(basePath string, options ...func(*GoArpa)) *GoArpa {
 	}
 
 	c.Config.GetServiceTokenEndpoint = makeURL("serv", "token", "GetServiceToken")
-	c.Config.CreateCustomerEndpoint = makeURL("serv", "api", "PostBussiness")
-	c.Config.CreateTransactionEndpoint = makeURL("serv", "api", "NewTransaction")
-	c.Config.CreateServiceEndpoint = makeURL("serv", "api", "PostService")
-	c.Config.GetCustomerEndpoint = makeURL("serv", "api", "GetBusiness")
+	c.Config.CreateCustomerEndpoint = makeURL("serv", "token", "PostBussiness")
+	c.Config.CreateTransactionEndpoint = makeURL("serv", "toke", "NewTransaction")
+	c.Config.CreateServiceEndpoint = makeURL("serv", "token", "PostService")
+	c.Config.GetCustomerEndpoint = makeURL("serv", "token", "GetBusiness")
 
 	for _, option := range options {
 		option(&c)
@@ -170,12 +170,12 @@ func (g *GoArpa) GetAdminToken(ctx context.Context, username string, password st
 	return resp.String(), resp.Cookies(), nil
 }
 
-func (g *GoArpa) CreateCustomer(ctx context.Context, accessToken string, customer CreateCustomerRequest) (*CreateCustomerResponse, error) {
+func (g *GoArpa) CreateCustomer(ctx context.Context, accessToken string, cookie []*http.Cookie, customer CreateCustomerRequest) (*CreateCustomerResponse, error) {
 	const errMessage = "could not create customer"
 
 	var response CreateCustomerResponse
 
-	resp, err := g.GetRequestWithBearerAuth(ctx, accessToken).
+	resp, err := g.GetRequestWithBearerAuthWithCookie(ctx, accessToken, cookie).
 		SetBody(customer).
 		SetResult(response).
 		Post(g.basePath + "/" + g.Config.CreateCustomerEndpoint)
