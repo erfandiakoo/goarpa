@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/erfandiakoo/goarpa/shared/constant"
+	"github.com/erfandiakoo/goarpa/v2/shared/constant"
 	"github.com/go-resty/resty/v2"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
