@@ -147,10 +147,15 @@ type CreateCustomerRequest struct {
 	BusinessCategoryID *int64  `json:"BusinessCategoryId"`
 }
 
+type RetCustomerResponse struct {
+	Data  CreateCustomerResponse `json:"data"`
+	Error interface{}            `json:"error"`
+}
+
 type CreateCustomerResponse struct {
-	BusinessCode string `json:"BussinesCode"`
-	BusinessID   string `json:"BussinessID"`
-	Existed      bool   `json:"Existed"`
+	BusinessID   string `json:"BusinessId"`
+	BusinessCode string `json:"BusinessCode"`
+	Existed      string `json:"Existed"`
 }
 
 type CreateTransactionRequest struct {

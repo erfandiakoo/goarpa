@@ -94,9 +94,9 @@ func NewClient(basePath string, options ...func(*GoArpa)) *GoArpa {
 	}
 
 	c.Config.GetServiceTokenEndpoint = makeURL("serv", "token", "GetServiceToken")
-	c.Config.CreateCustomerEndpoint = makeURL("serv", "api", "PostBussiness")
-	c.Config.CreateTransactionEndpoint = makeURL("serv", "Api", "NewTransaction")
-	c.Config.CreateServiceEndpoint = makeURL("serv", "Api", "PostService")
+	c.Config.CreateCustomerEndpoint = makeURL("serv", "api", "PostBusiness")
+	c.Config.CreateTransactionEndpoint = makeURL("serv", "api", "NewTransaction")
+	c.Config.CreateServiceEndpoint = makeURL("serv", "api", "PostService")
 	c.Config.GetCustomerEndpoint = makeURL("serv", "api", "GetBusiness")
 
 	for _, option := range options {
