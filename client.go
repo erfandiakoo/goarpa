@@ -170,10 +170,10 @@ func (g *GoArpa) GetAdminToken(ctx context.Context, username string, password st
 	return resp.String(), resp.Cookies(), nil
 }
 
-func (g *GoArpa) CreateCustomer(ctx context.Context, accessToken string, cookie []*http.Cookie, customer CreateCustomerRequest) (*CreateCustomerResponse, error) {
+func (g *GoArpa) CreateCustomer(ctx context.Context, accessToken string, cookie []*http.Cookie, customer CreateCustomerRequest) (*RetCustomerResponse, error) {
 	const errMessage = "could not create customer"
 
-	var response CreateCustomerResponse
+	var response RetCustomerResponse
 
 	resp, err := g.GetRequestWithBearerAuthWithCookie(ctx, accessToken, cookie).
 		SetBody(customer).
