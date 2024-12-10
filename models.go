@@ -310,8 +310,8 @@ type GetServiceResponse struct {
 	Factory                string     `json:"Factory"`
 	IsActive               string     `json:"IsActive"`
 	ItemLatinName          string     `json:"ItemLatinName"`
-	LimitQty               int64      `json:"LimitQty"`
-	Qty                    int64      `json:"Qty"`
+	LimitQty               string     `json:"LimitQty"`
+	Qty                    string     `json:"Qty"`
 	ItemNote               string     `json:"ItemNote"`
 	ItemCustomFieldsDesc   string     `json:"ItemCustomFieldsDesc"`
 	LastPurchasePrice      int64      `json:"LastPurchasePrice"`

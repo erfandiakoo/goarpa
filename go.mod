@@ -3,7 +3,6 @@ module github.com/erfandiakoo/goarpa/v2
 go 1.23.1
 
 require (
-	github.com/erfandiakoo/goarpa v0.0.0-20241111142223-de9a6b50cca3
 	github.com/go-resty/resty/v2 v2.16.0
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/pkg/errors v0.9.1
